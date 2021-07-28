@@ -1,9 +1,7 @@
-/* global __dirname, require, module*/
-
 const webpack = require('webpack');
 const path = require('path');
 const env = require('yargs').argv.env; // use --env with webpack 2
-const pkg = require('./package.json');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 let libraryName = 'pinata-sdk';
 
@@ -19,8 +17,8 @@ if (env === 'build') {
 
 const config = {
     mode: mode,
-    entry: ['babel-polyfill', __dirname + '/src/index.js'],
-    devtool: 'inline-source-map',
+    entry: [/* 'babel-polyfill', */ __dirname + '/src/index.js'],
+    devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
     output: {
         path: __dirname + '/lib',
         filename: outputFile,
@@ -34,24 +32,17 @@ const config = {
             {
                 test: /(\.jsx|\.js)$/,
                 loader: 'babel-loader',
-                exclude: /(node_modules|bower_components)/
+                exclude: /(node_modules)/
             },
-            {
-                test: /(\.jsx|\.js)$/,
-                loader: 'eslint-loader',
-                exclude: /node_modules/
-            }
         ]
     },
     target: 'web',
-    node: {
-      process: false
-    },
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        })
-    ],
+        }),
+        process.env.PROFILE && new BundleAnalyzerPlugin(),
+    ].filter(Boolean),
     resolve: {
         modules: [path.resolve('./node_modules'), path.resolve('./src')],
         extensions: ['.json', '.js']

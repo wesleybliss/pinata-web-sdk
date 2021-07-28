@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "description": "Unofficial Web SDK for the Pinata IPFS platform",
   "main": "lib/pinata-sdk.js",
-  "types": "types/index.d.ts",
   "scripts": {
-    "build": "webpack --env dev && webpack --env build && npm run test && tsc",
+    "build": "NODE_ENV=production npx webpack --progress --env dev && npx webpack --progress --env build",
+    "profile:dev": "NODE_ENV=production PROFILE=true npx webpack --progress=profile --env dev --json > compilation-stats.json",
+    "profile:build": "NODE_ENV=production PROFILE=true npx webpack --progress --env build --json > compilation-stats.json",
+    "profile": "yarn profile:dev && yarn profile:build",
     "coverage": "jest --coverage",
-    "dev": "webpack --progress --colors --watch --env dev",
+    "dev": "npx webpack --progress --colors --watch --env dev",
     "html": "open coverage/index.html",
     "lint": "eslint src --quiet ",
     "lint:fix": "eslint src --fix",
-    "test": "./node_modules/.bin/jest --env=node",
+    "test": "npx jest --env=node",
     "repl": "node -i -e \"$(< ./lib/pinata-sdk.js)\""
   },
   "repository": {
@@ -38,7 +40,6 @@
     "@babel/preset-env": "^7.9.0",
     "@babel/register": "^7.8.3",
     "@types/node": "^15.6.1",
-    "acorn": "^7.1.0",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-plugin-add-module-exports": "^1.0.2",
@@ -46,17 +47,15 @@
     "eslint": "^6.8.0",
     "eslint-loader": "^3.0.3",
     "jest": "^25.1.0",
-    "typescript": "^4.2.3",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "yargs": "^10.0.3"
   },
   "dependencies": {
-    "base-path-converter": "^1.0.2",
     "is-ipfs": "^0.6.0",
     "lodash.merge": "^4.6.2",
-    "recursive-fs": "^1.1.2"
+    "webpack-bundle-analyzer": "^4.4.2"
   },
   "jest": {
     "collectCoverage": true,
