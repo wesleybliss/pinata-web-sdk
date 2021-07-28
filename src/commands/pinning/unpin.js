@@ -1,45 +1,33 @@
-import axios from 'axios';
-import { baseUrl } from './../../constants';
-import { validateApiKeys } from '../../util/validators';
-import isIPFS from 'is-ipfs';
-import { handleError } from '../../util/errorResponse';
+import isIPFS from 'is-ipfs'
 
 /**
  * Unpin
- * @param {string} pinataApiKey
- * @param {string} pinataSecretApiKey
  * @param {string} hashToUnpin
- * @returns {Promise<unknown>}
+ * @returns {Promise}
  */
-export default function unpin(pinataApiKey, pinataSecretApiKey, hashToUnpin) {
-    validateApiKeys(pinataApiKey, pinataSecretApiKey);
-
-    if (!hashToUnpin) {
-        throw new Error('hashToUnpin value is required for removing a pin from Pinata');
+export default async function unpin(hashToUnpin) {
+    
+    if (!hashToUnpin)
+        throw new Error('hashToUnpin value is required for removing a pin from Pinata')
+    
+    if (!isIPFS.cid(hashToUnpin))
+        throw new Error(`${hashToUnpin} is an invalid IPFS CID`)
+    
+    const endpoint = `pinning/unpin/${hashToUnpin}`
+    
+    try {
+        
+        const result = await this.del(endpoint)
+        
+        if (result.status !== 200)
+            throw new Error(`unknown server response while removing pin from IPFS: ${result}`)
+        
+        return await result.json()
+        
+    } catch (e) {
+        const formattedError = this.handleError(e)
+        throw formattedError
+        
     }
-    if (!isIPFS.cid(hashToUnpin)) {
-        throw new Error(`${hashToUnpin} is an invalid IPFS CID`);
-    }
-
-    const endpoint = `${baseUrl}/pinning/unpin/${hashToUnpin}`;
-
-    return new Promise((resolve, reject) => {
-        axios.delete(
-            endpoint,
-            {
-                withCredentials: true,
-                headers: {
-                    'pinata_api_key': pinataApiKey,
-                    'pinata_secret_api_key': pinataSecretApiKey
-                }
-            }).then(function (result) {
-            if (result.status !== 200) {
-                reject(new Error(`unknown server response while removing pin from IPFS: ${result}`));
-            }
-            resolve(result.data);
-        }).catch(function (error) {
-            const formattedError = handleError(error);
-            reject(formattedError);
-        });
-    });
+    
 }

@@ -43,7 +43,7 @@ const config = {
             }
         ]
     },
-    target: 'node',
+    target: 'web',
     node: {
       process: false
     },

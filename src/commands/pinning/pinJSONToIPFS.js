@@ -1,59 +1,51 @@
-import axios from 'axios';
-import { baseUrl } from './../../constants';
-import { validateApiKeys, validateMetadata, validatePinataOptions } from '../../util/validators';
-import { handleError } from '../../util/errorResponse';
 
 /**
  * Pin JSON to IPFS
- * @param {string} pinataApiKey
- * @param {string} pinataSecretApiKey
  * @param {*} body
  * @param {*} options
- * @returns {Promise<unknown>}
+ * @returns {Promise}
  */
-export default function pinJSONToIPFS(pinataApiKey, pinataSecretApiKey, body, options) {
-    validateApiKeys(pinataApiKey, pinataSecretApiKey);
-
-    let requestBody = body;
-
-    if (typeof body !== 'object') {
-        throw new Error('body must be a valid JSON object');
-    }
-
+export default async function pinJSONToIPFS(body, options) {
+    
+    let requestBody = body
+    
+    if (typeof body !== 'object')
+        throw new Error('body must be a valid JSON object')
+    
     if (options) {
+        
         requestBody = {
             pinataContent: body
-        };
+        }
+        
         if (options.pinataMetadata) {
-            validateMetadata(options.pinataMetadata);
-            requestBody.pinataMetadata = options.pinataMetadata;
+            this.validateMetadata(options.pinataMetadata)
+            requestBody.pinataMetadata = options.pinataMetadata
         }
+        
         if (options.pinataOptions) {
-            validatePinataOptions(options.pinataOptions);
-            requestBody.pinataOptions = options.pinataOptions;
+            this.validatePinataOptions(options.pinataOptions)
+            requestBody.pinataOptions = options.pinataOptions
         }
+        
     }
-
-    const endpoint = `${baseUrl}/pinning/pinJSONToIPFS`;
-
-    return new Promise((resolve, reject) => {
-        axios.post(
-            endpoint,
-            requestBody,
-            {
-                withCredentials: true,
-                headers: {
-                    'pinata_api_key': pinataApiKey,
-                    'pinata_secret_api_key': pinataSecretApiKey
-                }
-            }).then(function (result) {
-            if (result.status !== 200) {
-                reject(new Error(`unknown server response while pinning JSON to IPFS: ${result}`));
-            }
-            resolve(result.data);
-        }).catch(function (error) {
-            const formattedError = handleError(error);
-            reject(formattedError);
-        });
-    });
+    
+    const endpoint = 'pinning/pinJSONToIPFS'
+    
+    try {
+        
+        const result = await this.post(endpoint, requestBody)
+        
+        if (result.status !== 200)
+            throw new Error(`unknown server response while pinning JSON to IPFS: ${result}`)
+        
+        return await result.json()
+        
+    } catch (e) {
+        
+        const formattedError = this.handleError(e)
+        throw formattedError
+        
+    }
+    
 }

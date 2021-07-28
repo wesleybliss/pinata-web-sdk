@@ -1,42 +1,31 @@
-import axios from 'axios';
-import { baseUrl } from './../../../constants';
-import { validateApiKeys } from '../../../util/validators';
-import queryBuilder from './queryBuilder';
-import { handleError } from '../../../util/errorResponse';
+import queryBuilder from './queryBuilder'
 
 /**
  * Pin Jobs
- * @param {string} pinataApiKey
- * @param {string} pinataSecretApiKey
  * @param {*} filters
- * @returns {Promise<unknown>}
+ * @returns {Promise}
  */
-export default function pinJobs(pinataApiKey, pinataSecretApiKey, filters) {
-    validateApiKeys(pinataApiKey, pinataSecretApiKey);
-
-    let endpoint = `${baseUrl}/pinning/pinJobs`;
-
-    if (filters) {
-        endpoint = queryBuilder(endpoint, filters);
+export default async function pinJobs(filters) {
+    
+    let endpoint = 'pinning/pinJobs'
+    
+    if (filters)
+        endpoint = queryBuilder(endpoint, filters)
+    
+    try {
+        
+        const result = await this.fetch(endpoint)
+        
+        if (result.status !== 200)
+            throw new Error(`unknown server response while attempting to retrieve pin jobs: ${result}`)
+        else
+            return await result.json()
+        
+    } catch (e) {
+        
+        const formattedError = this.handleError(e)
+        throw formattedError
+        
     }
-
-    return new Promise((resolve, reject) => {
-        axios.get(
-            endpoint,
-            {
-                withCredentials: true,
-                headers: {
-                    'pinata_api_key': pinataApiKey,
-                    'pinata_secret_api_key': pinataSecretApiKey
-                }
-            }).then(function (result) {
-            if (result.status !== 200) {
-                reject(new Error(`unknown server response while attempting to retrieve pin jobs: ${result}`));
-            }
-            resolve(result.data);
-        }).catch(function (error) {
-            const formattedError = handleError(error);
-            reject(formattedError);
-        });
-    });
+    
 }

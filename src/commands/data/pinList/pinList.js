@@ -1,39 +1,31 @@
-import axios from 'axios';
-import { baseUrl } from './../../../constants';
-import { validateApiKeys } from '../../../util/validators';
-import { handleError } from '../../../util/errorResponse';
-import queryBuilder from './queryBuilder';
+import queryBuilder from './queryBuilder'
 
 /**
  * Pin List
- * @param {string} pinataApiKey
- * @param {string} pinataSecretApiKey
  * @param {string} filters
- * @returns {Promise<unknown>}
+ * @returns {Promise}
  */
-export default function pinList(pinataApiKey, pinataSecretApiKey, filters) {
-    validateApiKeys(pinataApiKey, pinataSecretApiKey);
-
-    const baseEndpoint = `${baseUrl}/data/pinList`;
-    const endpoint = queryBuilder(baseEndpoint, filters);
-
-    return new Promise((resolve, reject) => {
-        axios.get(
-            endpoint,
-            {
-                withCredentials: true,
-                headers: {
-                    'pinata_api_key': pinataApiKey,
-                    'pinata_secret_api_key': pinataSecretApiKey
-                }
-            }).then(function (result) {
-            if (result.status !== 200) {
-                reject(new Error(`unknown server response while attempting to retrieve user pin list: ${result}`));
-            }
-            resolve(result.data);
-        }).catch(function (error) {
-            const formattedError = handleError(error);
-            reject(formattedError);
-        });
-    });
+async function pinList(filters) {
+    
+    const baseEndpoint = 'data/pinList'
+    const endpoint = queryBuilder(baseEndpoint, filters)
+    
+    try {
+        
+        const result = await this.fetch(endpoint)
+        
+        if (result.status !== 200)
+            throw new Error(`unknown server response while attempting to retrieve user pin list: ${result}`)
+        else
+            return await result.json()
+        
+    } catch (e) {
+        
+        const formattedError = this.handleError(e)
+        throw formattedError
+        
+    }
+    
 }
+
+export default pinList
