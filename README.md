@@ -18,8 +18,8 @@ yarn add pinata-web-sdk
 ## Setup
 To start, simply require the Pinata SDK and set up an instance with your Pinata API Keys. Don't know what your keys are? Check out your [Account Page](https://pinata.cloud/account).
 ```javascript
-const PinataSDK = require('pinata-web-sdk');
-const pinata = new PinataSDK('yourPinataJWT');
+import PinataSDK from 'pinata-web-sdk'
+const pinata = new PinataSDK('yourPinataJWT')
 ```
 
 Quickly test that you can connect to the API with the following call:
