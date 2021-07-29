@@ -20,10 +20,10 @@ export function validateHostNodes(hostNodes) {
     if (!Array.isArray(hostNodes))
         throw new Error('host_nodes value must be an array')
     
-    hostNodes.forEach(node => {
+    /* hostNodes.forEach(node => {
         if (!isIPFS.peerMultiaddr(node))
             throw new Error(`host_node array entry: ${node} is not a valid peer multiaddr`)
-    })
+    }) */
     
 }
 

@@ -2,12 +2,20 @@
   "name": "pinata-web-sdk",
   "version": "1.0.0",
   "description": "Unofficial Web SDK for the Pinata IPFS platform",
-  "main": "lib/pinata-sdk.js",
+  "author": "Wesley Bliss",
+  "bugs": {
+    "url": "https://github.com/wesleybliss/pinata-web-sdk/issues"
+  },
+  "homepage": "https://github.com/wesleybliss/pinata-web-sdk",
+  "license": "MIT",
+  "main": "lib/pinata-sdk.min.js",
   "scripts": {
-    "build": "NODE_ENV=production npx webpack --progress --env dev && npx webpack --progress --env build",
-    "profile:dev": "NODE_ENV=production PROFILE=true npx webpack --progress=profile --env dev --json > compilation-stats.json",
-    "profile:build": "NODE_ENV=production PROFILE=true npx webpack --progress --env build --json > compilation-stats.json",
-    "profile": "yarn profile:dev && yarn profile:build",
+    "build:dev": "NODE_ENV=development npx webpack --progress",
+    "build:prod": "NODE_ENV=production npx webpack --progress",
+    "build": "yarn build:dev && yarn build:prod",
+    "profile:dev": "NODE_ENV=development PROFILE=true npx webpack --progress=profile --json > compilation-stats.json",
+    "profile:prod": "NODE_ENV=production PROFILE=true npx webpack --progress --json > compilation-stats.json",
+    "profile": "yarn profile:dev && yarn profile:prod",
     "coverage": "jest --coverage",
     "dev": "npx webpack --progress --colors --watch --env dev",
     "html": "open coverage/index.html",
@@ -28,12 +36,10 @@
     "umd",
     "commonjs"
   ],
-  "author": "Wesley Bliss",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/wesleybliss/pinata-web-sdk/issues"
+  "dependencies": {
+    "is-ipfs": "^6.0.1",
+    "lodash.merge": "^4.6.2"
   },
-  "homepage": "https://github.com/wesleybliss/pinata-web-sdk",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
@@ -42,16 +48,14 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-add-module-exports": "^1.0.2",
     "babel-polyfill": "^6.26.0",
-    "jest": "^25.1.0",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "jest": "^27.0.6",
+    "json-minimizer-webpack-plugin": "^3.0.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11",
-    "yargs": "^10.0.3"
-  },
-  "dependencies": {
-    "is-ipfs": "^0.6.0",
-    "lodash.merge": "^4.6.2",
-    "webpack-bundle-analyzer": "^4.4.2"
+    "webpack": "^5.47.0",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.7.2",
+    "yargs": "^17.0.1"
   },
   "jest": {
     "collectCoverage": true,

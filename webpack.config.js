@@ -1,26 +1,30 @@
-const webpack = require('webpack');
-const path = require('path');
-const env = require('yargs').argv.env; // use --env with webpack 2
+const path = require('path')
+const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const TerserPlugin = require('terser-webpack-plugin')
+const JsonMinimizerPlugin = require('json-minimizer-webpack-plugin')
 
-let libraryName = 'pinata-sdk';
+const libraryName = 'pinata-sdk'
+const isProduction = process.env.NODE_ENV === 'production'
 
-let outputFile, mode;
+let mode = 'development'
+let outputFile = `${libraryName}.js`
 
-if (env === 'build') {
-    mode = 'production';
-    outputFile = libraryName + '.min.js';
-} else {
-    mode = 'development';
-    outputFile = libraryName + '.js';
+if (isProduction) {
+    mode = 'production'
+    outputFile = `${libraryName}.min.js`
 }
+
+console.info('\n*************************************************')
+console.info(`Building for ${mode}, ${outputFile}`)
+console.info('*************************************************\n')
 
 const config = {
     mode: mode,
-    entry: [/* 'babel-polyfill', */ __dirname + '/src/index.js'],
-    devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
+    entry: [path.resolve(__dirname, '/src/index.js')],
+    devtool: isProduction ? false : 'inline-source-map',
     output: {
-        path: __dirname + '/lib',
+        path: path.join(__dirname, '/lib'),
         filename: outputFile,
         library: libraryName,
         libraryTarget: 'umd',
@@ -31,12 +35,11 @@ const config = {
         rules: [
             {
                 test: /(\.jsx|\.js)$/,
+                exclude: /node_modules/,
                 loader: 'babel-loader',
-                exclude: /(node_modules)/
             },
         ]
     },
-    target: 'web',
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
@@ -44,9 +47,27 @@ const config = {
         process.env.PROFILE && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     resolve: {
-        modules: [path.resolve('./node_modules'), path.resolve('./src')],
-        extensions: ['.json', '.js']
-    }
-};
+        extensions: ['.js', '.json'],
+        modules: [
+            path.resolve('./node_modules'),
+            path.resolve('./src'),
+        ],
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+            }),
+            new JsonMinimizerPlugin(),
+        ],
+        splitChunks: false,
+    },
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000,
+    },
+}
 
-module.exports = config;
+module.exports = config
