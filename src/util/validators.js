@@ -101,8 +101,8 @@ export function validatePinataOptions(options) {
         if (options.wrapWithDirectory !== true && options.wrapWithDirectory !== false)
             throw new Error('wrapWithDirectory must be a boolean value of true or false')
     
-    if (options.hostNodes)
-        validateHostNodes(options.hostNodes)
+    /* if (options.hostNodes)
+        validateHostNodes(options.hostNodes) */
     
     if (options.customPinPolicy)
         validatePinPolicyStructure(options.customPinPolicy)
