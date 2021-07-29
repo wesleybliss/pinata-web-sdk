@@ -1,23 +1,25 @@
-<img src="https://cdn-images-1.medium.com/max/1200/1*BTGStLRXsQUbkp0t-oxJhQ.png" width="200" />
+<img src="https://i.imgur.com/G5prTAy_d.webp?maxwidth=760&fidelity=grand" width="200" />
 
 # Pinata SDK
 
-Official NodeJS SDK for [Pinata](https://pinata.cloud)
+> **Note: this is a WIP**
+
+Unofficial Web SDK for [Pinata](https://pinata.cloud)
 
 ## Overview
 
-The Pinata NodeJS SDK provides the quickest / easiest path for interacting with the [Pinata API](https://pinata.cloud/documentation#GettingStarted).
+The Pinata Web SDK provides the quickest / easiest path for interacting with the [Pinata API](https://pinata.cloud/documentation#GettingStarted).
 
 ## Installation
 ```
-npm install --save @pinata/sdk
+yarn add pinata-web-sdk
 ```
 
 ## Setup
 To start, simply require the Pinata SDK and set up an instance with your Pinata API Keys. Don't know what your keys are? Check out your [Account Page](https://pinata.cloud/account).
 ```javascript
-const pinataSDK = require('@pinata/sdk');
-const pinata = pinataSDK('yourPinataApiKey', 'yourPinataSecretApiKey');
+const PinataSDK = require('pinata-web-sdk');
+const pinata = new PinataSDK('yourPinataJWT');
 ```
 
 Quickly test that you can connect to the API with the following call:
