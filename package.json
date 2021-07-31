@@ -22,8 +22,7 @@
     "lint": "eslint src --quiet ",
     "lint:fix": "eslint src --fix",
     "test": "npx jest --env=node",
-    "repl": "node -i -e \"$(< ./lib/pinata-sdk.js)\"",
-    "publish": "npm publish --access public"
+    "repl": "node -i -e \"$(< ./lib/pinata-sdk.js)\""
   },
   "repository": {
     "type": "git",
