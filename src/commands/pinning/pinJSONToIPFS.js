@@ -34,11 +34,15 @@ export default async function pinJSONToIPFS(body, options) {
     
     try {
         
-        const result = await this.post(endpoint, requestBody)
+        const result = await this.postJSON(endpoint, requestBody, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
         
         if (result.status !== 200)
             throw new Error(`unknown server response while pinning JSON to IPFS: ${result}`)
-        
+        console.log('pinJSONToIPFS raw result', result)
         return await result.json()
         
     } catch (e) {
