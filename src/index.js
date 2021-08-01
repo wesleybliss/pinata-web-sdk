@@ -129,7 +129,7 @@ class PinataSDK {
     async del(endpoint, intercept = this.defaultInterceptor) {
         const { url, options } = intercept(
             this.makeUrl(endpoint),
-            this.makeOpts(opts, {
+            this.makeOpts({}, {
                 method: 'DELETE',
             })
         )

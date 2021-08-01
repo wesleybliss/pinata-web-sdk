@@ -22,7 +22,7 @@ export default async function unpin(hashToUnpin) {
         if (result.status !== 200)
             throw new Error(`unknown server response while removing pin from IPFS: ${result}`)
         
-        return await result.json()
+        return /* await result.json() */ true
         
     } catch (e) {
         const formattedError = this.handleError(e)
