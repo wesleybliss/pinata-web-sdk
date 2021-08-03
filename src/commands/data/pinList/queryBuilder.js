@@ -242,6 +242,10 @@ export default function queryBuilder(baseEndpoint, filters) {
         
     }
     
+    // No dangling question mark
+    if (filterQuery.endsWith('?'))
+        filterQuery = filterQuery.substring(0, filterQuery.length - 1)
+    
     return `${filterQuery}${metadataQuery}`
     
 }

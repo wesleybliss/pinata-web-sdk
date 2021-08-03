@@ -87,7 +87,9 @@ class PinataSDK {
     async fetch(endpoint, opts = {}, intercept = this.defaultInterceptor) {
         const { url, options } = intercept(
             this.makeUrl(endpoint),
-            this.makeOpts(opts)
+            this.makeOpts(opts, {
+                method: 'GET',
+            })
         )
         const response = await fetch(url, options)
         return response
