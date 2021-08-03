@@ -10,7 +10,7 @@ export default async function testAuthentication() {
     
     try {
         
-        const result = await this.fetch(endpoint)
+        const result = await this.get(endpoint)
         
         if (result.status !== 200)
             throw new Error(`unknown server response while authenticating: ${result}`)

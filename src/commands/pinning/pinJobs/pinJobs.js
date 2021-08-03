@@ -14,7 +14,7 @@ export default async function pinJobs(filters) {
     
     try {
         
-        const result = await this.fetch(endpoint)
+        const result = await this.get(endpoint)
         
         if (result.status !== 200)
             throw new Error(`unknown server response while attempting to retrieve pin jobs: ${result}`)

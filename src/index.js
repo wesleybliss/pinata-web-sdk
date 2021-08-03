@@ -71,7 +71,7 @@ class PinataSDK {
     }
     
     makeOpts(...opts) {
-        const newOpts = merge(this.defaultOpts, ...opts)
+        const newOpts = merge({ ...this.defaultOpts }, ...opts)
         // Make sure nobody nukes the auth header on accident
         newOpts.headers.Authorization = this.defaultOpts.headers.Authorization
         return newOpts
@@ -80,11 +80,11 @@ class PinataSDK {
     defaultInterceptor(url, opts) {
         return {
             url,
-            options: opts,
+            options: { ...opts },
         }
     }
     
-    async fetch(endpoint, opts = {}, intercept = this.defaultInterceptor) {
+    async get(endpoint, opts = {}, intercept = this.defaultInterceptor) {
         const { url, options } = intercept(
             this.makeUrl(endpoint),
             this.makeOpts(opts, {
@@ -103,7 +103,6 @@ class PinataSDK {
                 body: data,
             })
         )
-        console.log('@@post with opts', url, options)
         const response = await fetch(url, options)
         return response
     }

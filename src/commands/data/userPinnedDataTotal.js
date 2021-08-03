@@ -9,7 +9,7 @@ export default async function userPinnedDataTotal() {
     
     try {
         
-        const result = await this.fetch(endpoint)
+        const result = await this.get(endpoint)
         
         if (result.status !== 200)
             throw new Error(`unknown server response while attempting to retrieve pinned data total: ${result}`)
